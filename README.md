@@ -9,16 +9,20 @@
 > The goal of this project is to create a single tool for all the common daily service desk tasks. My current role requires me to use at least 4 different tools which can be replaced with this. The project is very early in development. Current functionality is limited to fetching data and has partial integration for ActiveDirectory and ServiceDesk+.
 
 ** Planned Features **
+
 - Integration with ManageEngine ServiceDesk+
 - Quick-actions to automate or simplify multi-step processes
 - Skype integration
 - Enhanced search functionality for Active Directory
 
 ** Partially Implemented Features **
+
 -Live-searching of AD objects
 	-Searches employeeID, email, all name attributes, and more
 	-Utilizes the Typeahed library for super fast search results
-	-<img src="https://i.imgur.com/AO5CDta.png" title="Search Bar" alt="Search Bar">
+
+<img src="https://i.imgur.com/AO5CDta.png" title="Search Bar" alt="Search Bar">
+
 -DataTables for cached AD data
 	-Allows for super fast searching of AD data
 	-Select which columns to show and generate .csv documents for simple reports
