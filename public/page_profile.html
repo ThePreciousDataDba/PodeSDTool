@@ -1,0 +1,556 @@
+<div class="row">
+	<div class="col-lg-6 col-xl-3 order-lg-1 order-xl-1">
+		<!-- profile summary -->
+		<div id="profileLeftCard" class="card mb-g rounded-top">
+			<script id="leftProfileCardTemplate" type="text/x-handlebars-template">
+				<div class="row no-gutters row-grid">
+					<div class="col-12">
+						<div class="d-flex flex-column align-items-center justify-content-center p-4">
+							<img src="img/demo/avatars/avatar.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+							<h5 class="mb-0 fw-700 text-center mt-3">
+								{{displayName}}<small class="text-muted mb-0">{{Title}}</small><small class="text-muted mb-0">{{company}} -- {{department}}</small>
+								<address class="fs-sm fw-400 mt-2 mb-0 text-muted">
+									<i class="fas fa-map-pin mr-2"></i> {{StreetAddress}}, {{l}}, {{st}}, {{PostalCode}}
+								</address>
+							</h5>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="text-center py-3">
+							<h5 class="mb-0 fw-700">
+								{{whenCreated}}<small class="text-muted mb-0">Start Date</small>
+							</h5>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="text-center py-3">
+							<h5 class="mb-0 fw-700">
+								{{employeeID}}<small class="text-muted mb-0">Employee ID</small>
+							</h5>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="text-center py-3">
+							<h5 class="mb-0 fw-700">
+								{{accountStatus}}<small class="text-muted mb-0">Active Employee</small>
+							</h5>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="p-3 text-center">
+							<a href="tel:{{telephoneNumber}}" class="mt-1 d-block fs-sm fw-400 text-dark">
+								<i class="fas fa-mobile-alt text-muted mr-2"></i> {{telephoneNumber}}
+							</a>
+							<a href="mailto:{{mail}}" class="mt-1 d-block fs-sm fw-400 text-dark">
+								<i class="fas fa-mouse-pointer text-muted mr-2"></i> {{mail}}
+							</a>
+						</div>
+						<div class="p-3 text-center">
+							<a href="javascript:void(0);" class="btn-link font-weight-bold">E-mail</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+							<a href="javascript:void(0);" class="btn-link font-weight-bold">Skype Message</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+							<a href="javascript:void(0);" class="btn-link font-weight-bold">Connect</a>
+						</div>
+					</div>
+				</div>
+			</script>
+		</div>
+	</div>
+
+	<div class="col-lg-12 col-xl-6 order-lg-3 order-xl-2">
+		<div class="card mb-g">
+			<div class="card-body pb-0 px-4">
+				<div class="row">
+					<div class="col-auto">
+						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+							<a class="nav-link active" id="v-pills-properties-tab" data-toggle="pill" href="#v-pills-properties" role="tab" aria-controls="v-pills-properties" aria-selected="true">
+								<i class="fal fa-home"></i>
+								<span class="hidden-sm-down ml-1"> Properties</span>
+							</a>
+							<a class="nav-link" id="v-pills-tickets-tab" data-toggle="pill" href="#v-pills-tickets" role="tab" aria-controls="v-pills-tickets" aria-selected="false">
+								<i class="fal fa-user"></i>
+								<span class="hidden-sm-down ml-1"> Support Requests</span>
+							</a>
+							<a class="nav-link" id="v-pills-devices-tab" data-toggle="pill" href="#v-pills-devices" role="tab" aria-controls="v-pills-devices" aria-selected="false">
+								<i class="fal fa-user"></i>
+								<span class="hidden-sm-down ml-1"> Devices</span>
+							</a>
+							<a class="nav-link" id="v-pills-actions-tab" data-toggle="pill" href="#v-pills-actions" role="tab" aria-controls="v-pills-actions" aria-selected="false">
+								<i class="fal fa-envelope"></i>
+								<span class="hidden-sm-down ml-1"> Quick Actions</span>
+							</a>
+							<a class="nav-link" id="v-pills-notes-tab" data-toggle="pill" href="#v-pills-notes" role="tab" aria-controls="v-pills-notes" aria-selected="false">
+								<i class="fal fa-cog"></i>
+								<span class="hidden-sm-down ml-1"> Notes</span>
+							</a>
+							<a class="nav-link" id="v-pills-debug-tab" data-toggle="pill" href="#v-pills-debug" role="tab" aria-controls="v-pills-debug" aria-selected="false">
+								<i class="fal fa-cog"></i>
+								<span class="hidden-sm-down ml-1"> Debug</span>
+							</a>
+						</div>
+					</div>
+					<div class="col">
+						<div class="tab-content" id="v-pills-tabContent">
+							<div class="tab-pane fade active show height-lg" id="v-pills-properties" role="tabpanel" aria-labelledby="v-pills-properties-tab">
+								<h3>
+									Properties
+								</h3>
+
+								<div id="userProperties"></div>
+
+								<script id="userPropertiesTemplate" type="text/x-handlebars-template">
+									<div class="form-row">
+										<div class="col-md-12 mb-3">
+											<label class="form-label" for="name-f">Full Name</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text text-success">
+														<i class="ni ni-user fs-xl"></i>
+													</span>
+												</div>
+												<input id="userProperties_nameF" type="text" aria-label="First name" class="form-control col-md-4" placeholder="First name" value="{{givenName}}">
+												<input id="userProperties_nameM" type="text" aria-label="Middle initial" class="form-control col-md-2" placeholder="Middle initial" value="{{initials}}">
+												<input id="userProperties_nameL" type="text" aria-label="Last name" class="form-control col-md-6" placeholder="Last name" value="{{sn}}">
+											</div>
+										</div>
+									</div>
+
+									<div class="form-row">
+										<div class="col-md-6 mb-3">
+											<label class="form-label">Display Name</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text"><i class="fal fa-user fs-xl"></i></span>
+												</div>
+												<input id="userProperties_displayName" type="text" class="form-control" placeholder="Display Name" aria-label="Display Name" value="{{displayName}}">
+											</div>
+										</div>
+
+										<div class="col-md-6 mb-3">
+											<label class="form-label">Real Name</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text"><i class="fal fa-user fs-xl"></i></span>
+												</div>
+												<input id="userProperties_realName" type="text" class="form-control" placeholder="Real Name" aria-label="Real Name"value="{{name}}">
+											</div>
+										</div>
+									</div>
+
+									<div class="form-row">
+										<div class="col-md-4 mb-3">
+											<label class="form-label">LoginID</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text"><i class="fal fa-user fs-xl"></i></span>
+												</div>
+												<input id="userProperties_LoginID" type="text" class="form-control" placeholder="LoginID" aria-label="LoginID"value="{{sAMAccountName}}">
+											</div>
+										</div>
+
+										<div class="col-md-8 mb-3">
+											<label class="form-label">Email</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text"><i class="fal fa-mouse-pointer width-1 text-align-center"></i></span>
+												</div>
+												<input id="userProperties_email" type="text" placeholder="" data-inputmask="'alias': 'email'" class="form-control" value="{{mail}}">
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="form-label">Phone</label>
+										<input id="userProperties_phone" type="text" placeholder="" data-inputmask="'mask': '(999) 999-9999'" class="form-control" value="{{telephoneNumber}}">
+									</div>
+
+									<div class="form-group">
+			                            <label class="form-label" for="example-datetime-local-input">Account Expiration Date</label>
+			                            <input id="userProperties_accountExpires" class="form-control" type="datetime-local" value="{{AccountExpirationDate}}">
+			                        </div>
+
+									<div class="form-group">
+										<label class="form-label" for="basic-url">Account Info</label>
+										<textarea class="form-control" aria-label="With textarea">{{info}}</textarea>
+									</div>
+
+									<script>
+										$(document).ready(function(){
+											$(":input").inputmask();
+										});
+									</script>
+								</script>
+							</div>
+							<div class="tab-pane fade height-lg" id="v-pills-tickets" role="tabpanel" aria-labelledby="v-pills-tickets-tab">
+								<h3>
+									Support Requests
+								</h3>
+								<div id="ticketList" class="row no-gutters row-grid">
+
+								</div>
+							</div>
+							<div class="tab-pane fade height-lg" id="v-pills-devices" role="tabpanel" aria-labelledby="v-pills-devices-tab">
+								<h3>
+									Devices
+								</h3>
+								<div id="deviceList" class="row no-gutters row-grid">
+									<div class="form-group">
+										<label class="form-label">IP</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="fal fa-wifi width-1 text-align-center"></i></span>
+											</div>
+											<input type="text" placeholder="" data-inputmask="'alias': 'ip'" class="form-control">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="form-label">MAC Address</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="fal fa-desktop-alt width-1 text-align-center"></i></span>
+											</div>
+											<input type="text" placeholder="" data-inputmask="'alias': 'mac'" class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade height-lg" id="v-pills-actions" role="tabpanel" aria-labelledby="v-pills-actions-tab">
+								<h3>
+									Quick Actions
+								</h3>
+
+							</div>
+							<div class="tab-pane fade height-lg" id="v-pills-notes" role="tabpanel" aria-labelledby="v-pills-notes-tab">
+								<h3>Notes</h3>
+								<div class="js-summernote" id="saveToLocal"></div>
+							</div>
+							<div class="tab-pane fade height-lg" id="v-pills-debug" role="tabpanel" aria-labelledby="v-pills-debug-tab">
+								<h3>Debug</h3>
+								<div id="homeTabContent" class="input-group input-group-lg mb-g">
+									<textarea id="debugResponse" class="form-control shadow-inset-2" aria-label="With textarea" style="margin-top: 0px; margin-bottom: 0px; height: 500px;"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-6 col-xl-3 order-lg-2 order-xl-3">
+		<div class="card mb-2">
+			<div class="card-body">
+				<div class="bg-success-900 rounded bg-info-gradient">
+					<div class="d-flex position-relative py-3 px-4">
+						<i class="fal fa-search color-success-700 position-absolute pos-left fs-lg px-3 py-2 mt-1 ml-4"></i>
+						<input type="text" id="userMemberOf_list_filter" class="form-control shadow-inset-1 pl-6 border-success" placeholder="Filter nested items (e.g buttons, chart)">
+					</div>
+					<!-- nav-menu-reset will reset the font colors -->
+					<ul id="userMemberOf_list" class="nav-menu nav-menu-reset nav-menu-compact bg-success-900 bg-info-gradient mb-sm-4 mb-md-0 rounded" data-nav-accordion="true">
+
+					</ul>
+					<div class="filter-message js-filter-message m-0 text-left pl-4 py-3 fw-500"></div>
+				</div>
+			</div>
+		</div>
+		<div class="card mb-2">
+			<div class="card-body">
+				<div class="card border mb-4 mb-xl-0">
+					<!-- notice the additions of utility paddings and display properties on .card-header -->
+					<div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+						<!-- we wrap header title inside a span tag with utility padding -->
+						<div class="card-title text-white">Input</div>
+						<div class="d-flex position-relative ml-auto" style="max-width: 10rem;">
+							<i class="fal fa-search position-absolute pos-left fs-lg px-3 py-2 mt-1"></i>
+							<input type="text" class="form-control bg-subtlelight pl-6" placeholder="Search">
+						</div>
+					</div>
+					<div class="card-body">
+						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script id="nestItemTemplate" type="text/x-handlebars-template">
+<li>
+	<a href="javascript:void(0)" onclick="copyLinkToClipboard(this)" data-filter-tags="{{searchStrings}}">
+		<span class="nav-link-text">{{title}}</span>
+	</a>
+</script>
+
+<script id="ticketListTemplate" type="text/x-handlebars-template">
+	<div class="col-12">
+		<div class="row no-gutters row-grid align-items-stretch">
+			<div class="col-md">
+				<div class="p-3">
+					<div class="d-flex flex-column">
+						<a href="#ticket_view.html?id={{id}}" class="fs-lg fw-500 d-flex align-items-start">
+							{{subject}}<span class="badge badge-warning ml-auto">{{status.name}}</span>
+						</a>
+						<div class="d-block text-muted fs-sm">
+							Created by <a href="#page_profile.html?user={{requester.name}}" class="text-info">{{requester.name}}</a> on {{created_time.display_value}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script src="js/formplugins/inputmask/inputmask.bundle.js"></script>
+
+<script>
+	function copyLinkToClipboard(passedElement) {
+		var range = document.createRange();
+		range.selectNode(passedElement);
+		console.log(passedElement);
+		window.getSelection().removeAllRanges(); // clear current selection
+		window.getSelection().addRange(range); // to select text
+		document.execCommand("copy");
+		window.getSelection().removeAllRanges();// to deselect
+	}
+
+	var userPage = new urlPM(window.location.href);
+	var userData = {};
+
+	if(userPage.getParam('userID',"") != "") {
+		fetchADUser(userPage.getParam('userID',""),"LogonName");
+	} else {
+		if (userPage.getParam('user',"") != "") {
+			fetchADUser(userPage.getParam('user',""),"DisplayName");
+		}else{
+			console.log("Invalid or no search paramater provided - name.");
+		}
+	}
+
+	function userTickets(){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "api/v3/requests",
+			data: JSON.stringify({
+				"list_info": {
+					"row_count": 10,
+					"get_total_count": true,
+					"fields_required": ["id","priority","requester","created_by","is_overdue","group","short_description","status","subject","created_time","on_behalf_of","requester.email_id"],
+					"search_criteria": [
+						{
+							"field": "requester.name",
+							"condition": "starts with",
+							"value": userData["displayName"],
+						},
+						{
+							"field": "on_behalf_of.name",
+							"condition": "starts with",
+							"value": userData["displayName"],
+							"logical_operator": "or"
+						},
+						{
+							"field": "created_by.name",
+							"condition": "starts with",
+							"value": userData["displayName"],
+							"logical_operator": "or"
+						}
+					]
+				}
+			}),
+			success: function(response) {
+				var responseStatus = response.response_status[0];
+
+				if(responseStatus.status_code != 2000) {
+					console.log("API Error - " + responseStatus.status + "(" + responseStatus.status_code + ")");
+					return;
+				}
+
+				console.log(response.requests);
+
+				var tableHTML = '';
+				var requests = response.requests;
+				var listInfo = response.list_info;
+				var templateSource   = document.getElementById("ticketListTemplate").innerHTML;
+				var template = Handlebars.compile(templateSource);
+
+				$.each(requests, function(requestIndex, requestData){
+					$.each(requestData, function(index, value){
+						if(value === null){
+							requestData[index] = {
+								name:''
+							};
+						}
+					});
+
+					tableHTML += template(requestData);
+				 });
+
+				 $("#ticketList").html(tableHTML);
+			},
+			error: function(request,error){console.log(request);}
+		});
+	};
+
+	function groupMembership(){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "api/adp/userGroupsRecursive",
+			data:JSON.stringify({
+				user: userData["sAMAccountName"],
+				rngDontCacheMeBro: Math.random()
+			}),
+			success: function(response) {
+				var templateSource = document.getElementById("nestItemTemplate").innerHTML;
+				var template = Handlebars.compile(templateSource);
+				var nestedGroupsHTML = "";
+
+				function GetGroupNames(parentGroup,titleText,searchableData){
+					var objectTitle = {
+						"title": titleText,
+						"searchStrings": searchableData.toLowerCase()
+					};
+					nestedGroupsHTML += template(objectTitle);
+					if(Object.keys(parentGroup).length > 0){
+						nestedGroupsHTML += "<ul>";
+						Object.keys(parentGroup).sort().forEach(function(selectedObject){
+							GetGroupNames(parentGroup[selectedObject],selectedObject,(searchableData + " " + selectedObject));
+						});
+						nestedGroupsHTML += "</ul>";
+					}else{
+						nestedGroupsHTML += "</li>";
+					};
+				};
+
+				Object.keys(response).sort().forEach(function(selectedObject){
+					GetGroupNames(response[selectedObject],selectedObject, selectedObject);
+				});
+
+				 $("#userMemberOf_list").html(nestedGroupsHTML);
+				  initApp.listFilter($('#userMemberOf_list'), $('#userMemberOf_list_filter'));
+				initApp.buildNavigation($('#userMemberOf_list'));
+			},
+			error: function(request,error){
+				console.log(request);
+			}
+		});
+	};
+
+	function fetchADUser(userName,searchMethod){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			cache:false,
+			url: "api/adp/user",
+			data:JSON.stringify({
+				user: decodeURIComponent(userName),
+				mode: searchMethod,
+				rngDontCacheMeBro: Math.random()
+			}),
+			success : function(response) {
+				userData = response;
+				// Format/change/create new properties from the fetched AD data.
+				userData["accountStatus"] = (userData["userAccountControl"] == 512) ? "Yes" : "No";
+				const dateValues = ["whenChanged","whenCreated","PasswordLastSet","LastLogonDate"];
+				loginID = userData["displayName"];
+				displayName = userData["displayName"];
+
+				dateValues.forEach(adDate => {
+					var date = new Date(parseInt((userData[adDate].substring(6, 19))));
+					userData[adDate] = (date.toDateString());
+				});
+
+				document.getElementById("debugResponse").value = JSON.stringify(userData, null, 2);
+
+				var leftCardTemplateSource = document.getElementById("leftProfileCardTemplate").innerHTML;
+				var leftCardTemplate = Handlebars.compile(leftCardTemplateSource);
+				$("#profileLeftCard").html(leftCardTemplate(userData));
+
+				var propertiesTemplateSource = document.getElementById("userPropertiesTemplate").innerHTML;
+				var propertiesTemplate = Handlebars.compile(propertiesTemplateSource);
+				$("#userProperties").html(propertiesTemplate(userData));
+
+				initializeNotes();
+				groupMembership();//Get recursive group membership
+				userTickets();//Load the recent user tickets
+			},
+			error : function(request,error){
+				console.log(request);
+				$("#js-page-content").html(request.responseText);
+			}
+		});
+	};
+
+	function initializeNotes(){
+		//################### Notes Functionality
+
+		//$('#summernote').summernote('focus');
+
+		var autoSave = $('#autoSave');
+		var interval;
+		var timer = function(){
+			interval = setInterval(function(){
+				saveToLocal();
+				clearInterval(interval);
+			}, 200);
+		};
+
+		//save
+		var saveToLocal = function(){
+			localStorage.setItem(("summernoteData-"+userData["sAMAccountName"]), $('#saveToLocal').summernote("code"));
+			console.log("saved "+"summernoteData-"+userData["sAMAccountName"]);
+		}
+
+		//delete
+		var removeFromLocal = function(){
+			localStorage.removeItem(("summernoteData-"+userData["sAMAccountName"]));
+			$('#saveToLocal').summernote('reset');
+		}
+
+		$(document).ready(function(){
+			//init default
+			$('.js-summernote').summernote({
+				height: 200,
+				tabsize: 4,
+				placeholder: "Type notes here...",
+				dialogsFade: true,
+				toolbar: [
+					['style', ['style']],
+					['font', ['strikethrough', 'superscript', 'subscript']],
+					['font', ['bold', 'italic', 'underline', 'clear']],
+					['fontsize', ['fontsize']],
+					['fontname', ['fontname']],
+					['color', ['color']],
+					['para', ['ul', 'ol', 'paragraph']],
+					['height', ['height']],
+					['table', ['table']],
+					['insert', ['link', 'picture', 'video']],
+					['view', ['fullscreen', 'codeview', 'help']]
+				],
+				hint:{
+					mentions: substringMatcher(adCacheUsers),
+					match: /\B@(\w.{2,})$/,
+					search: function(keyword, callback){
+						this.mentions(keyword,callback);
+					},
+					content: function(item){
+						console.log(item);
+						return $('<span><a href="#page_profile.html?userID='+item["LogonName"]+'" class="text-info">@'+item["FirstName"]+' '+item["LastName"]+'</a>&nbsp;</span>')[0];
+					}
+				},
+				callbacks:{
+					//restore from localStorage
+					onInit: function(e){
+						$('.js-summernote').summernote("code", localStorage.getItem(("summernoteData-"+userData["sAMAccountName"])));
+					},
+					onChange: function(contents, $editable){
+						clearInterval(interval);
+						timer();
+					}
+				}
+			});
+		});
+	}
+
+
+</script>

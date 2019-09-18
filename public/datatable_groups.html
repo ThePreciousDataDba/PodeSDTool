@@ -1,0 +1,132 @@
+<div class="subheader">
+	<h1 class="subheader-title">
+		<i class='subheader-icon fal fa-table'></i> Active Directory: <span class='fw-300'>Groups Table</span> <sup class='badge badge-primary fw-500'>Super Fast</sup>
+		<small>
+			Search, filter, and generate reports which can be printed or exported to Excel.
+		</small>
+	</h1>
+</div>
+<div class="row">
+	<div class="col-xl-12">
+		<div id="panel-1" class="panel">
+			<div class="panel-hdr">
+				<h2>
+					<span class="fw-300">Group Table</span>
+				</h2>
+				<div class="panel-toolbar">
+					<button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+					<button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+					<button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+				</div>
+			</div>
+			<div class="panel-container show">
+				<div class="panel-content">
+					<!-- datatable start -->
+					<table id="AD_Groups_DataTable" class="table table-bordered table-hover table-striped w-100" data-page-length='15'>
+						<thead class="bg-primary-100">
+							<tr>
+								<th>Name</th>
+								<th>SamAccountName</th>
+								<th>GroupCategory</th>
+								<th>CreatedDate</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<!-- datatable end -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="js/datagrid/datatables/datatables.bundle.js"></script>
+<script src="js/datagrid/datatables/datatables.export.js"></script>
+<script>
+	$('#AD_Groups_DataTable thead tr').clone(true).appendTo('#AD_Groups_DataTable thead');
+	$('#AD_Groups_DataTable thead tr:eq(1) th').each(function(i) {
+		var title = $(this).text();
+		$(this).html('<input type="text" class="form-control form-control-sm" placeholder="..." />');
+
+		$('input', this).on('keyup change', function()
+		{
+			if (table.column(i).search() !== this.value)
+			{
+				table
+					.column(i)
+					.search(this.value)
+					.draw();
+			}
+		});
+	});
+
+	var table = $('#AD_Groups_DataTable').DataTable({
+		data: adCacheGroups,
+		columns: [
+			{ data: 'Name' },
+			{ data: 'SamAccountName' },
+			{ data: 'GroupCategory' },
+			{ data: 'CreatedDate' },
+			{ data: 'Description' }
+		],
+		order: [[ 0, "asc" ],[ 2, "asc" ]],
+		deferRender: true,
+		autoWidth : true,
+		orderCellsTop: true,
+		lengthChange: false,
+	
+		dom:
+			/*	--- Layout Structure 
+				--- Options
+				l	-	length changing input control
+				f	-	filtering input
+				t	-	The table!
+				i	-	Table information summary
+				p	-	pagination control
+				r	-	processing display element
+				B	-	buttons
+				R	-	ColReorder
+				S	-	Select
+
+				--- Markup
+				< and >				- div element
+				<"class" and >		- div with a class
+				<"#id" and >		- div with an ID
+				<"#id.class" and >	- div with an ID and a class
+
+				--- Further reading
+				https://datatables.net/reference/option/dom
+				--------------------------------------
+			 */
+			"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+			"<'row'<'col-sm-12'tr>>" +
+			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+		buttons: [
+			{
+				extend:    'colvis',
+				text:      'Column Visibility',
+				titleAttr: 'Col visibility',
+				className: 'btn-outline-default'
+			},
+			{
+				extend: 'excelHtml5',
+				text: 'Excel',
+				titleAttr: 'Generate Excel',
+				className: 'btn-outline-default'
+			},
+			{
+				extend: 'copyHtml5',
+				text: 'Copy',
+				titleAttr: 'Copy to clipboard',
+				className: 'btn-outline-default'
+			},
+			{
+				extend: 'print',
+				text: 'Print',
+				titleAttr: 'Print Table',
+				className: 'btn-outline-default'
+			}
+		]
+	});
+</script>

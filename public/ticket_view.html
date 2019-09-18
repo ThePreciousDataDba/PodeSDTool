@@ -1,0 +1,273 @@
+<script id="ticketView_Header" type="text/x-handlebars-template">
+	<div class="subheader">
+		<h1 class="subheader-title">
+			<i class='subheader-icon fal fa-plus-circle'></i> {{subject}}: <span id='headerTicketID' class='fw-300'>#{{id}}</span>
+			<small>
+				{{group.name}}
+			</small>
+		</h1>
+	</div>
+</script>
+
+<div id="ticket_leftColumn"class="col-xl-9">
+	<div id="ticket_header">
+
+	</div>
+
+	<div id="panel-2" class="panel panel-collapsed">
+		<div class="panel-hdr text-success">
+			<h2>
+				Debug Data <span class="fw-300"><i>Json</i></span>
+			</h2>
+			<div class="panel-toolbar">
+				<button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+			</div>
+		</div>
+		<div class="panel-container collapse" style="">
+			<div class="panel-content">
+				<textarea id="debugResponse" class="form-control shadow-inset-2" aria-label="With textarea" style="margin-top: 0px; margin-bottom: 0px; height: 500px;"></textarea>
+			</div>
+		</div>
+	</div>
+
+	<div id="ticket_mainPost">
+
+	</div>
+
+	<div id="ticket_messages">
+
+	</div>
+
+</div>
+
+<div id="ticket_rightColumn"class="col-xl-3">
+
+</div>
+
+
+<script id="ticketView_mainPost" type="text/x-handlebars-template">
+	<div class="card mb-g border shadow-0">
+		<div class="card-header bg-white p-0">
+			<div class="p-3 d-flex flex-row">
+				<div class="d-block flex-shrink-0">
+					<img src="img/demo/avatars/avatar.png" class="img-fluid img-thumbnail" alt="">
+				</div>
+				<div class="d-block ml-2">
+					<span class="h6 font-weight-bold text-uppercase d-block m-0"><a href="#page_profile.html?user={{requester.name}}">{{requester.name}}</a></span>
+					Affected User: <span class="fs-sm h6 fw-500 mb-0"><a href="#page_profile.html?user={{on_behalf_of.name}}">{{on_behalf_of.name}}</a>&nbsp;</span>
+					<span class="text-muted fs-xs font-italic d-block">{{created_time.display_value}}</span>
+				</div>
+				<a href="javascript:void(0);" class="d-inline-flex align-items-center text-dark ml-auto align-self-start">
+					<span class="badge badge-warning ml-auto">{{status.name}}</span>
+				</a>
+			</div>
+		</div>
+		<div id="mainPost_{{id}}" class="card-body ">
+		</div>
+		<div class="card-footer">
+			<div class="d-flex align-items-center">
+				<a href="javascript:void(0);" class="flex-shrink-0 ml-auto">Reply <i class="fal fa-reply ml-2"></i> </a>
+			</div>
+		</div>
+	</div>
+</script>
+
+
+<script id="ticketView_messagePost" type="text/x-handlebars-template">
+	<div class="card mb-g border shadow-0">
+		<div class="card-header bg-white p-0">
+			<div class="p-3 d-flex flex-row">
+				<div class="d-block flex-shrink-0">
+					<img src="img/demo/avatars/avatar.png" class="img-fluid img-thumbnail" alt="">
+				</div>
+				<div class="d-block ml-2">
+					<span class="h6 font-weight-bold text-uppercase d-block m-0"><a href="#page_profile.html?user={{created_by.name}}">{{created_by.name}}</a></span>
+					<span class="text-muted fs-xs font-italic d-block">{{created_time.display_value}}</span>
+				</div>
+				<a href="javascript:void(0);" class="d-inline-flex align-items-center text-dark ml-auto align-self-start">
+					<span class="badge badge-warning ml-auto">{{show_to_requester}}</span>
+				</a>
+			</div>
+		</div>
+		<div id="{{type}}_{{id}}" class="card-body ">
+		</div>
+		<div class="card-footer">
+			<div class="d-flex align-items-center">
+				<a href="javascript:void(0);" class="flex-shrink-0 ml-auto">Reply <i class="fal fa-reply ml-2"></i> </a>
+			</div>
+		</div>
+	</div>
+</script>
+
+
+<script>
+	var requestPage = new urlPM(window.location.href);
+	var requestData = {};
+
+	function loadNotes(id){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			async: false,
+			url: "api/v3/requests/"+id+"/notes",
+			data: JSON.stringify({
+				list_info:{
+					fields_required: ["id","description","created_by","created_time","show_to_requester"]
+				}
+			}),
+			success : function(response) {
+				//console.log(response);
+				requestData["notes"] = response.notes;
+			},
+			error : function(request,error){
+				console.log(request);
+			}
+		});
+	}
+
+	function loadConversations(id){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			async: false,
+			url: "api/v3/requests/"+id+"/conversations",
+			data: JSON.stringify({
+				list_info:{
+					sort_field: "sent_time",
+					sort_order: "desc",
+					start_index: "1"
+				}
+			}),
+			success : function(response) {
+				//console.log(response);
+				requestData["conversations"] = response.conversations;
+			},
+			error : function(request,error){
+				console.log(request);
+			}
+		});
+	}
+
+	function loadSummary(id){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "api/v3/requests/"+id+"/summary",
+			data: JSON.stringify({
+				list_info:{
+					fields_required: ["task_completed_count","task_total_count","dependency_count","note_count","link_request_count"]
+				}
+			}),
+			success : function(response) {
+				//console.log(response);
+			},
+			error : function(request,error){
+				console.log(request);
+			}
+		});
+	}
+
+	function parseDescriptionHTML(htmlString){
+		return decodeURIComponent(htmlString)
+				.replace(/<\s*blockquote[^>]*>/gi,'<blockquote class="font-italic fw-sm bg-faded border border-top-0 border-right-0 border-bottom-0 p-3">')
+				.replace(/(<\/b><br \/><\/div>)/gi,'</b></div>')
+				.replace(/(<div><br \/><\/div>){2,2}/gi,'<br>');
+	}
+
+	function processRequestData(){
+		var mainPost = parseDescriptionHTML(requestData.request.description);
+
+		console.log(requestData);
+		document.getElementById("debugResponse").value = JSON.stringify(requestData, null, 2);
+
+		var template_mainPost_source = document.getElementById("ticketView_mainPost").innerHTML;
+		var template_mainPost = Handlebars.compile(template_mainPost_source);
+		$("#ticket_mainPost").html(template_mainPost(requestData.request));
+		$("#mainPost_"+requestData.request.id).html(mainPost);
+
+		var template_header_source = document.getElementById("ticketView_Header").innerHTML;
+		var template_header = Handlebars.compile(template_header_source);
+		$("#ticket_header").html(template_header(requestData.request));
+
+		var allMessages = [];
+
+		if(requestData.notes) {
+			requestData.notes.forEach(function(note) {
+				allMessages.push({
+					type: "note",
+					id: note.id,
+					created_time: note.created_time,
+					created_by: note.created_by,
+					description: parseDescriptionHTML(note.description),
+					show_to_requester: note.show_to_requester
+				});
+			});
+		}
+
+		if(requestData.conversations) {
+			requestData.conversations.forEach(function(convo) {
+				allMessages.push ({
+					type: convo.type,
+					id: convo.id,
+					created_time: convo.sent_time,
+					created_by: convo.from,
+					description: convo.content_url,
+					show_to_requester: convo.show_to_requester,
+					has_attachments: convo.has_attachments
+				});
+			});
+		}
+
+		function sortByTime(a, b) {
+			return b.created_time.value - a.created_time.value;
+		}
+
+		allMessages.sort(sortByTime);
+		console.log(allMessages);
+
+		var template_messageSource = document.getElementById("ticketView_messagePost").innerHTML;
+		var templateMessage = Handlebars.compile(template_messageSource);
+
+		allMessages.forEach(function(message) {
+			$("#ticket_messages").append(templateMessage(message));
+			$("#"+message.type+"_"+message.id).html(message.description);
+		});
+	}
+
+	function getRequestData(id){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "api/v3/requests/"+id,
+
+			success : function(response) {
+				//console.log(response);
+
+				var responseStatus = response.response_status;
+
+				if(responseStatus.status_code != 2000) {
+					console.log("API Error - " + responseStatus.status + "(" + responseStatus.status_code + ")");
+					return;
+				}
+
+				requestData["request"] = response.request;
+
+				if(requestData.request.has_notes){
+					loadNotes(id);
+				}
+
+				if(requestData.request.has_conversation){
+					loadConversations(id);
+				}
+
+				processRequestData();
+			},
+			error : function(request,error){
+				console.log(request);
+			}
+		});
+	};
+
+	//jQuery(document).ready(function() {
+	getRequestData(requestPage.getParam('id',-1));
+</script>

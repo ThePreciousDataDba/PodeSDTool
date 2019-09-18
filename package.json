@@ -1,0 +1,14 @@
+﻿{
+    "version":  "1.0.0",
+    "license":  "MIT",
+    "name":  "PodeSDTool",
+    "scripts":  {
+		"test":  "invoke-pester ./tests/*.ps1",
+		"install":  "yarn install --force --ignore-scripts --modules-folder pode_modules",
+		"build":  "psake",
+		"start":  "./server.ps1"
+	},
+    "description":  "Powershell application to provide a web interface for general service desk tasks.",
+    "author":  "Cory Blevings",
+    "main":  "./server.ps1"
+}
