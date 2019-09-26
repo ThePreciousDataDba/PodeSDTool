@@ -1,3 +1,9 @@
+.MsoNormal {
+	line-height: 1.2;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
 span.twitter-typeahead .tt-menu,
 span.twitter-typeahead .tt-dropdown-menu {
 	cursor: pointer;

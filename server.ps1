@@ -30,15 +30,19 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 	Set-PodeViewEngine -Type Pode
 	Import-PodeModule -Name ActiveDirectory
 	New-PodeLoggingMethod -Terminal | Enable-PodeErrorLogging
+	Enable-PodeSessionMiddleware -Secret 'podeSDPsession' -Name "SDPSession" -Duration 36000
+
+
 
 	Add-PodeRoute -Method Get -Path '/' -ScriptBlock {Write-PodeViewResponse -Path 'index'}
+	Add-PodePage -Name login -FilePath '.\views\login.pode' -Data @{ Domain = "$((Get-PodeConfig).SDPDomain)" }
 
 	#Main SDP api caller
 	Add-PodeRoute -Method Post -Path '/api/v3/requests' -ScriptBlock {
 		param($s)
 		try {
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
@@ -48,8 +52,8 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 		param($s)
 		try {
 			$requestID = $s.Parameters['ID']
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests/$requestID"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests/$requestID"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
@@ -59,8 +63,8 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 		param($s)
 		try {
 			$requestID = $s.Parameters['ID']
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests/$requestID/notes"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests/$requestID/notes"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
@@ -70,8 +74,8 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 		param($s)
 		try {
 			$requestID = $s.Parameters['ID']
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests/$requestID/conversations"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests/$requestID/conversations"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
@@ -81,8 +85,8 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 		param($s)
 		try {
 			$requestID = $s.Parameters['ID']
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests/$requestID/notifications"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests/$requestID/notifications"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
@@ -94,8 +98,8 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 			$requestID = $s.Parameters['ID']
 			$convID = $s.Parameters['convID']
 			$inputData = $s.Query["INPUT_DATA"]
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests/$requestID/notifications/$convID"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=$inputData} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests/$requestID/notifications/$convID"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=$inputData} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
@@ -105,11 +109,68 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 		param($s)
 		try {
 			$requestID = $s.Parameters['ID']
-			$apiURL = "$((Get-PodeConfig).MESDP)/requests/$requestID/summary"
-			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).TechnicianKey;})
+			$apiURL = "$((Get-PodeConfig).SDPLink)/api/v3/requests/$requestID/summary"
+			Write-PodeJsonResponse -Value (Invoke-RestMethod -Uri $apiURL -Method GET -Body @{"input_data"=($s.Data | ConvertTo-Json -Depth 8)} -Headers @{"TECHNICIAN_KEY" = (Get-PodeConfig).SDPTechnicianKey;})
         }catch {
             Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
         }
+	}
+
+	Add-PodeRoute -Method Get -Path '/servlet/HdClientUtilServlet' -ScriptBlock {
+		param($s)
+		try {
+			$hdCommand = $s.Query["command"]
+			$hdModule = $s.Query["module"]
+			$apiURL = "$((Get-PodeConfig).SDPLink)/servlet/HdClientUtilServlet?command=$hdCommand&module=$hdModule"
+			$response = (Invoke-RestMethod -Uri $apiURL -WebSession $s.Session.Data.SDPSession -Method GET -Headers @{"Accept-Encoding"="gzip, deflate, br"; "Accept-Language"="en-US,en;q=0.9"; "User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.75 Safari/537.36"; "Sec-Fetch-Mode"="cors"; "Accept"="*/*"; "Cache-Control"="no-cache"; "X-Requested-With"="XMLHttpRequest"})
+			$s.Session.Data.SDPSession = $s.Session.Data.SDPSession
+			Write-PodeJsonResponse -Value $response
+        }catch {
+            Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
+        }
+	}
+
+	Add-PodeRoute -Method Get -Path '/servlet/SDAjaxServlet' -ScriptBlock {
+		param($s)
+		try {
+			$sdAjaxFormat = $s.Query["format"]
+			$sdAjaxAction = $s.Query["action"]
+			$apiURL = "$((Get-PodeConfig).SDPLink)/servlet/SDAjaxServlet?format=$sdAjaxFormat&action=$sdAjaxAction"
+			$response = (Invoke-RestMethod -Uri $apiURL -WebSession $s.Session.Data.SDPSession -Method GET -Headers @{"Accept-Encoding"="gzip, deflate, br"; "Accept-Language"="en-US,en;q=0.9"; "User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.75 Safari/537.36"; "Sec-Fetch-Mode"="cors"; "Accept"="*/*"; "Cache-Control"="no-cache"; "X-Requested-With"="XMLHttpRequest"})
+			$s.Session.Data.SDPSession = $s.Session.Data.SDPSession
+			Write-PodeJsonResponse -Value $response
+        }catch {
+            Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
+        }
+	}
+
+	Add-PodeRoute -Method Get -Path '/servlet/AJaxServlet' -ScriptBlock {
+		param($s)
+		try {
+			$ajaxServletAction = $s.Query["action"]
+			$apiURL = "$((Get-PodeConfig).SDPLink)/servlet/AJaxServlet?action=$ajaxServletAction"
+			$response = (Invoke-RestMethod -Uri $apiURL -WebSession $s.Session.Data.SDPSession -Method GET -Headers @{"Accept-Encoding"="gzip, deflate, br"; "Accept-Language"="en-US,en;q=0.9"; "User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.75 Safari/537.36"; "Sec-Fetch-Mode"="cors"; "Accept"="*/*"; "Cache-Control"="no-cache"; "X-Requested-With"="XMLHttpRequest"})
+			$s.Session.Data.SDPSession = $s.Session.Data.SDPSession
+			Write-PodeJsonResponse -Value $response
+		}catch {
+            Set-PodeResponseStatus -Code 500 -Description 'Oh no, something went wrong! Verify API paramaters are correct.' -Exception $_.Exception
+        }
+	}
+
+	Add-PodeRoute -Method Post -Path '/j_security_check' -ScriptBlock {
+		param($s)
+
+		$apiURL = "$((Get-PodeConfig).SDPLink)/j_security_check"
+
+		Invoke-RestMethod -Uri "$((Get-PodeConfig).SDPLink)/" -UseDefaultCredential -SessionVariable d -Method Get
+		$loginResponse = (Invoke-RestMethod -ContentType "application/x-www-form-urlencoded" -WebSession $d -Uri $apiURL -Method POST -Body ($s.Data) -Headers @{"Accept-Encoding"="gzip, deflate, br"; "Accept-Language"="en-US,en;q=0.9"; "User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.75 Safari/537.36"; "Sec-Fetch-Mode"="cors"; "Accept"="*/*"; "Cache-Control"="no-cache"; "X-Requested-With"="XMLHttpRequest"})
+		$s.Session.Data.SDPSession = $d
+
+		if($loginResponse.toString().Contains('logged_user = "null"')){
+			Move-PodeResponseUrl -Url '/login'
+		}else{
+			Move-PodeResponseUrl -Url '/'
+		}
 	}
 
 	Add-PodeRoute -Method Post -Path '/api/ping' -ScriptBlock {
@@ -142,7 +203,7 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 				$queryString = "sAMAccountName -like '$($userData)'"
 			}
 
-			$adResult = @(Get-ADuser -filter $queryString -Server:(Get-PodeConfig).Domain -SearchBase:"OU=UsersAndComputers,DC=domain,DC=org" -Properties telephoneNumber,otherTelephone,mobile,otherMobile,homephone,OfficePhone,PostalCode,Office,st,l,StreetAddress,physicalDeliveryOfficeName,displayName,name,givenName,sn,initials,employeeID,sAMAccountName,Title,department,company,description,info,manager,userAccountControl,homeDrive,objectClass,profilePath,whenChanged,whenCreated,pwdLastSet,sAMAccountType,primaryGroupID,PrincipalsAllowedToDelegateToAccount,PasswordExpired,PasswordLastSet,PasswordNeverExpires,PasswordNotRequired,AccountExpirationDate,LockedOut,LastLogonDate,ObjectGUID,ObjectCategory,mailNickname,mail,showInAddressBook,msExchHideFromAddressLists,extensionAttribute1,extensionAttribute2,extensionAttribute3,extensionAttribute4,extensionAttribute5,extensionAttribute6,extensionAttribute7,extensionAttribute8,extensionAttribute9,extensionAttribute10 | select telephoneNumber,otherTelephone,mobile,otherMobile,homephone,OfficePhone,PostalCode,Office,st,l,StreetAddress,physicalDeliveryOfficeName,displayName,name,givenName,sn,initials,employeeID,sAMAccountName,Title,department,company,description,info,manager,userAccountControl,homeDrive,objectClass,profilePath,whenChanged,whenCreated,pwdLastSet,sAMAccountType,primaryGroupID,PrincipalsAllowedToDelegateToAccount,PasswordExpired,PasswordLastSet,PasswordNeverExpires,PasswordNotRequired,AccountExpirationDate,LockedOut,LastLogonDate,ObjectGUID,ObjectCategory,mailNickname,mail,showInAddressBook,msExchHideFromAddressLists,extensionAttribute1,extensionAttribute2,extensionAttribute3,extensionAttribute4,extensionAttribute5,extensionAttribute6,extensionAttribute7,extensionAttribute8,extensionAttribute9,extensionAttribute10)
+			$adResult = @(Get-ADuser -filter $queryString -Server:(Get-PodeConfig).DomainController -SearchBase:"OU=NetworkUsersAndComputers,DC=domain,DC=org" -Properties telephoneNumber,otherTelephone,mobile,otherMobile,homephone,OfficePhone,PostalCode,Office,st,l,StreetAddress,physicalDeliveryOfficeName,displayName,name,givenName,sn,initials,employeeID,sAMAccountName,Title,department,company,description,info,manager,userAccountControl,homeDrive,objectClass,profilePath,whenChanged,whenCreated,pwdLastSet,sAMAccountType,primaryGroupID,PrincipalsAllowedToDelegateToAccount,PasswordExpired,PasswordLastSet,PasswordNeverExpires,PasswordNotRequired,AccountExpirationDate,LockedOut,LastLogonDate,ObjectGUID,ObjectCategory,mailNickname,mail,showInAddressBook,msExchHideFromAddressLists,extensionAttribute1,extensionAttribute2,extensionAttribute3,extensionAttribute4,extensionAttribute5,extensionAttribute6,extensionAttribute7,extensionAttribute8,extensionAttribute9,extensionAttribute10 | select telephoneNumber,otherTelephone,mobile,otherMobile,homephone,OfficePhone,PostalCode,Office,st,l,StreetAddress,physicalDeliveryOfficeName,displayName,name,givenName,sn,initials,employeeID,sAMAccountName,Title,department,company,description,info,manager,userAccountControl,homeDrive,objectClass,profilePath,whenChanged,whenCreated,pwdLastSet,sAMAccountType,primaryGroupID,PrincipalsAllowedToDelegateToAccount,PasswordExpired,PasswordLastSet,PasswordNeverExpires,PasswordNotRequired,AccountExpirationDate,LockedOut,LastLogonDate,ObjectGUID,ObjectCategory,mailNickname,mail,showInAddressBook,msExchHideFromAddressLists,extensionAttribute1,extensionAttribute2,extensionAttribute3,extensionAttribute4,extensionAttribute5,extensionAttribute6,extensionAttribute7,extensionAttribute8,extensionAttribute9,extensionAttribute10)
 
 			Write-PodeJsonResponse -Value ($adResult | ConvertTo-Json -Depth 10 -Compress)
         }catch {
@@ -158,7 +219,7 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 			$queryString = "sAMAccountName -like '$($userData)'"
 
 			function Get-UserMembership(){
-				$userGroups = (Get-ADUser -filter $queryString -Server:(Get-PodeConfig).Domain -SearchBase:"OU=UsersAndComputers,DC=domain,DC=org" -Property MemberOf).MemberOf | ForEach-Object {Get-GroupMembers $_ 1}
+				$userGroups = (Get-ADUser -filter $queryString -Server:(Get-PodeConfig).DomainController -SearchBase:"OU=NetworkUsersAndComputers,DC=domain,DC=org" -Property MemberOf).MemberOf | ForEach-Object {Get-GroupMembers $_ 1}
 				$formattedGroups = @{}
 
 				foreach ($p in $userGroups) {
@@ -197,7 +258,7 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 
 			#Write-Host "$(Get-Date -Format u) Starting user export.";
 			$jsonFilePath = ".\PodeSDTool\public\api\Cached_ADUsers.json";
-			Get-ADUser -Filter * -Server:(Get-PodeConfig).Domain -Properties DisplayName,sAMAccountName,GivenName,Surname,Mail,Enabled,Name,EmployeeID | % {
+			Get-ADUser -Filter * -Server:(Get-PodeConfig).DomainController -Properties DisplayName,sAMAccountName,GivenName,Surname,Mail,Enabled,Name,EmployeeID | % {
 				New-Object PSObject -Property @{
 					LogonName      = $_.sAMAccountName;
 					Displayname    = $_.DisplayName;
@@ -218,7 +279,7 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 
 			#Write-Host "$(Get-Date -Format u) Starting groups export.";
 			$jsonFilePath = ".\PodeSDTool\public\api\Cached_ADGroups.json";
-			Get-ADGroup -Filter * -Server:(Get-PodeConfig).Domain -Properties GroupCategory,Name,SamAccountName,Created,Description | % {
+			Get-ADGroup -Filter * -Server:(Get-PodeConfig).DomainController -Properties GroupCategory,Name,SamAccountName,Created,Description | % {
 				New-Object PSObject -Property @{
 					Name              = $_.Name;
 					SamAccountName    = $_.SamAccountName;
@@ -236,7 +297,7 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 
 			#Write-Host "$(Get-Date -Format u) Starting groups export.";
 			$jsonFilePath = ".\PodeSDTool\public\api\Cached_ADComputers.json";
-			Get-ADComputer -Filter * -Server:(Get-PodeConfig).Domain -Properties LastBadPasswordAttempt,Description,Enabled,IPv4Address,LastLogonDate,DNSHostName,Location,Name | % {
+			Get-ADComputer -Filter * -Server:(Get-PodeConfig).DomainController -Properties LastBadPasswordAttempt,Description,Enabled,IPv4Address,LastLogonDate,DNSHostName,Location,Name | % {
 				New-Object PSObject -Property @{
 					LastBadPasswordAttempt	= $_.LastBadPasswordAttempt;
 					Description				= $_.Description;

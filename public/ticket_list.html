@@ -66,7 +66,7 @@
 	<div class="col-12">
 		<div class="row no-gutters row-grid align-items-stretch">
 			<div class="col-md">
-				<div class="p-3">
+				<div class="p-2">
 					<div class="d-flex flex-column">
 						<a href="#ticket_view.html?id={{id}}" class="fs-lg fw-500 d-flex align-items-start">
 							{{subject}}<span class="badge badge-warning ml-auto">{{status.name}}</span>
@@ -78,19 +78,19 @@
 				</div>
 			</div>
 			<div class="col-4 col-md-2 col-xl-1 hidden-md-down">
-				<div class="p-3 p-md-3">
+				<div class="p-2 p-md-2">
 					<span class="d-block text-muted">Priority: <i>{{priority.name}}</i></span>
 					<span class="d-block text-muted">Overdue: <i>{{is_overdue}}</i></span>
 				</div>
 			</div>
 			<div class="col-8 col-md-3 hidden-md-down">
-				<div class="p-3 p-md-3">
+				<div class="p-2 p-md-2">
 					<div class="d-flex align-items-center">
 						<div class="d-inline-block align-middle status status-sm mr-2">
 							<span class="profile-image-md rounded-circle d-block" style="background-image:url('img/demo/avatars/avatar.png'); background-size: cover;"></span>
 						</div>
 						<div class="flex-1 min-width-0">
-							<a href="javascript:void(0)" class="d-block text-truncate">
+							<a href="javascript:void(0)" class="d-block text-truncate has-tooltip" data-title="{{short_description}}" data-placement="auto">
 								{{short_description}}
 							</a>
 							<div class="text-muted small text-truncate">
@@ -108,23 +108,19 @@
 	var ticketsPage = new urlPM(window.location.href);
 
 	function getRequests(page){
-		if(page <= 1){
-			ticketsPage.setParam('page', null);
-		}else{
-			ticketsPage.setParam('page', page);
-		}
-		ticketsPage.load();
-
 		$.ajax({
 		  type: "POST",
 		  contentType: "application/json",
 		  url: "api/v3/requests",
 		  data: JSON.stringify({
 			list_info:{
-				row_count: 10,
-				start_index: ((page-1) * 10),
+				row_count: 15,
+				start_index: ((page-1) * 15),
 				get_total_count: true,
-				fields_required: ["id","priority","requester","created_by","is_overdue","group","short_description","status","subject","created_time","on_behalf_of"]
+				fields_required: ["id","priority","requester","created_by","is_overdue","group","short_description","status","subject","created_time","on_behalf_of"],
+				filter_by: {
+					name: ticketsPage.getParam('view','All_Requests')
+				}
 			}
 		  }),
 		  success : function(response) {
@@ -155,6 +151,10 @@
 			 });
 
 			 $("#ticketList").html(tableHTML);
+
+				$('body').tooltip({
+				  selector: '.has-tooltip'
+				});
 		  },
 		  error : function(request,error){alert(request);}
 		});
@@ -165,6 +165,13 @@
 		if(desiredPage < 1) {
 			desiredPage = 1;
 		}
+
+		if(desiredPage <= 1){
+			ticketsPage.setParam('page', null);
+		}else{
+			ticketsPage.setParam('page', desiredPage);
+		}
+		ticketsPage.load();
 
 		getRequests(desiredPage);
 	}

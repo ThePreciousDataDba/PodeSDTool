@@ -100,8 +100,8 @@
                             <img src="img/demo/avatars/avatar.png" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
                             <div class="info-card-text">
                                 <a href="#" class="d-flex align-items-center text-white">
-                                    <span class="text-truncate text-truncate-sm d-inline-block">
-                                        $($data.username)
+                                    <span id="meSDPUser" class="text-truncate text-truncate-sm d-inline-block">
+
                                     </span>
                                 </a>
                             </div>
@@ -828,13 +828,7 @@
                     <!-- BEGIN Page Content -->
                     <!-- the #js-page-content id is needed for some plugins to initialize -->
                     <main id="js-page-content" role="main" class="page-content">
-                        <ol class="breadcrumb page-breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">SmartAdmin</a></li>
-                            <li class="breadcrumb-item">category_1</li>
-                            <li class="breadcrumb-item">category_2</li>
-                            <li class="breadcrumb-item active">SmartAdmin WebApp</li>
-                            <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
-                        </ol>
+
                         <div class="subheader">
                             <h1 class="subheader-title">
                                 <i class='subheader-icon fal fa-'></i> Page <span class='fw-300'>Title</span> <sup class='badge badge-primary fw-500'>ADDON</sup>
@@ -1712,6 +1706,37 @@
 					adCacheComputers = response;
 				}
 			});
+
+			var SDPDetails = {};
+			$.ajax({
+				url: 'servlet/AJaxServlet?action=GetHeaderDetails',
+				async: false,
+				cache: true,
+				contentType: "application/json",
+				success: function (response) {
+					SDPDetails = response;
+					$/**/('#meSDPUser').html(SDPDetails.user_details.USERNAME+"<br>"+SDPDetails.user_details.USERTYPE);
+				},
+				error : function(request,error){
+					console.log(request);
+				}
+			});
+
+
+			var SDPViews = {};
+			$.ajax({
+				type: "GET",
+				async: false,
+				contentType: "application/json",
+				url: "servlet/HdClientUtilServlet?command=getFilteredViews&module=requests",
+				success : function(response) {
+					SDPViews = response.show_all_filters.reverse();
+				},
+				error : function(request,error){
+					console.log(request);
+				}
+			});
+
 
 			var userSearchDD_source = document.getElementById("userSearchDropDown_template").innerHTML;
 			var userSearchDD_template = Handlebars.compile(userSearchDD_source);

@@ -1,7 +1,8 @@
 @{
-	Domain = ""
-	MESDP = "https://******/api/v3"
-	TechnicianKey = ""
+	DomainController = "123.domain.org"
+	SDPLink = "https://sdp.website.org"
+	SDPDomain = "domain"
+	SDPTechnicianKey = "1-1-11-1-1"
     Web = @{
         Static = @{
             Defaults = @(
@@ -14,7 +15,9 @@
                 MaxAge = 15
                 Include = @(
                     '*.jpg',
-					'*.png'
+					'*.png',
+					'*.css',
+					'*.js'
                 )
             }
         }
