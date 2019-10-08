@@ -4,6 +4,16 @@
 	margin-top: 0;
 }
 
+.multiModal {
+	pointer-events:none;
+}
+
+.multiModalDialog {
+	pointer-events:auto;
+	height: auto !important;
+	width: 425px;
+}
+
 span.twitter-typeahead .tt-menu,
 span.twitter-typeahead .tt-dropdown-menu {
 	cursor: pointer;
@@ -47,4 +57,75 @@ span.twitter-typeahead .tt-suggestion:focus {
 	text-decoration: none;
 	outline: 0;
 	background-color: #efebf5;
+}
+
+
+.smart-style-1 .ui-chatbox-titlebar{
+    background:#3E4553!important
+}
+.smart-style-1 .ui-chatbox-titlebar.ui-state-focus{
+    background:#1B1F27!important
+}
+.smart-style-2 .ui-chatbox-titlebar{
+    background:#576574!important
+}
+.smart-style-2 .ui-chatbox-titlebar.ui-state-focus{
+    background:#2C3742!important
+}
+.smart-style-3 .ui-chatbox-titlebar{
+    background-color:#66605B!important
+}
+.smart-style-3 .ui-chatbox-titlebar.ui-state-focus{
+    background-color:#4B433C!important
+}
+.smart-style-5 .ui-chatbox-input-focus{
+    color:#000
+}
+.smart-style-5 .chat-body{
+    background:0 0;
+    border-color:transparent
+}
+.smart-style-5 .chat-footer{
+    background:rgba(255,255,225,.15)
+}
+.smart-style-5 .ui-chatbox-titlebar{
+    background:#2A4F58!important
+}
+.smart-style-5 .ui-chatbox-titlebar.ui-state-focus{
+    background:#204149!important
+}
+.smart-style-5 .ui-chatbox .ui-widget-content{
+    background:rgba(51,103,105,.6);
+    background:-webkit-gradient(linear,left bottom,left top,color-stop(0,rgba(81,165,177,.6)),color-stop(1,rgba(68,85,139,.6)));
+    background:-ms-linear-gradient(bottom,rgba(81,165,177,.6),rgba(68,85,139,.6));
+    background:-moz-linear-gradient(center bottom,rgba(81,165,177,.6)0,rgba(68,85,139,.6)100%);
+    background:-o-linear-gradient(rgba(68,85,139,.6),rgba(81,165,177,.6));
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='rgba(68, 85, 139, 0.6)', endColorstr='rgba(81, 165, 177, 0.6)', GradientType=0)
+}
+.smart-style-5 .ui-state-focus+.ui-widget-content{
+    background:rgba(51,103,105,.6);
+    background:-webkit-gradient(linear,left bottom,left top,color-stop(0,rgba(68,85,139,.9)),color-stop(1,rgba(68,85,139,.9)));
+    background:-ms-linear-gradient(bottom,rgba(68,85,139,.9),rgba(68,85,139,.9));
+    background:-moz-linear-gradient(center bottom,rgba(68,85,139,.9)0,rgba(68,85,139,.9)100%);
+    background:-o-linear-gradient(rgba(68,85,139,.9),rgba(68,85,139,.9));
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='rgba(68, 85, 139, 0.9)', endColorstr='rgba(68, 85, 139, 0.9)', GradientType=0)
+}
+.smart-style-5 .ui-chatbox-content>.alert-msg{
+    background:#FFFDD0
+}
+.smart-style-5 .ui-chatbox-input{
+    background:rgba(29,96,117,.6)
+}
+.smart-style-5 .ui-chatbox .ui-widget-content textarea{
+    background:rgba(0,0,0,.23)!important;
+    border-color:rgba(0,0,0,.23)!important;
+    color:#fff
+}
+.smart-style-5 .ui-chatbox .ui-widget-content textarea:focus{
+    background:rgba(0,0,0,.53)!important;
+    border-color:rgba(0,0,0,.53)!important;
+    font-weight:700
+}
+.smart-style-5 #chat-container #chat-users li a img,.smart-style-5 #shortcut ul li .jarvismetro-tile,.smart-style-5 .chat-body li.message img,.smart-style-5 .friends-list img,.smart-style-5 .inbox-download-list li>:first-child>:first-child>img,.smart-style-5 .login-info img,.smart-style-5 .notification-body,.smart-style-5 .profile-pic>img,.smart-style-5 .usr-card>img{
+    border-radius:50% 0!important
 }

@@ -1,0 +1,421 @@
+<script id="userSearchDropDown_template" type="text/x-handlebars-template">
+	<div class="dropdown-item">
+		{{#if FirstName}}
+		{{LastName}}, {{FirstName}} - {{EmployeeID}} -
+		{{/if}}
+		{{LogonName}}
+
+		{{#ifEquals AccountEnabled "Enabled"}}
+			<i class="fal fa-check-circle"></i>
+		{{else}}
+			<i class="fal fa-minus-circle"></i>
+		{{/ifEquals}}
+	</div>
+</script>
+
+<script id="nestItemTemplate" type="text/x-handlebars-template">
+<li>
+	<a href="javascript:void(0)" onclick="copyLinkToClipboard(this)" data-filter-tags="{{searchStrings}}">
+		<span class="nav-link-text">{{title}}</span>
+	</a>
+</script>
+
+<script id="ticketListTemplate" type="text/x-handlebars-template">
+	<div class="col-12">
+		<div class="row no-gutters row-grid align-items-stretch">
+			<div class="col-md">
+				<div class="p-2">
+					<div class="d-flex flex-column">
+						<a href="#ticket_view.html?id={{id}}" class="fs-lg fw-500 d-flex align-items-start">
+							{{subject}}<span class="badge badge-warning ml-auto">{{status.name}}</span>
+						</a>
+						<div class="d-block text-muted fs-sm">
+							Created by <a href="javascript:openUserCardModal(getUserID('{{requester.name}}'));" class="text-info">{{requester.name}}</a> on {{created_time.display_value}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-4 col-md-2 col-xl-1 hidden-md-down">
+				<div class="p-2 p-md-2">
+					<span class="d-block text-muted">Priority: <i>{{priority.name}}</i></span>
+					<span class="d-block text-muted">Overdue: <i>{{is_overdue}}</i></span>
+				</div>
+			</div>
+			<div class="col-8 col-md-3 hidden-md-down">
+				<div class="p-2 p-md-2">
+					<div class="d-flex align-items-center">
+						<div class="d-inline-block align-middle status status-sm mr-2">
+							<span class="profile-image-md rounded-circle d-block" style="background-image:url('img/demo/avatars/avatar.png'); background-size: cover;"></span>
+						</div>
+						<div class="flex-1 min-width-0">
+							<a href="javascript:void(0)" class="d-block text-truncate has-tooltip" data-title="{{short_description}}" data-placement="auto">
+								{{short_description}}
+							</a>
+							<div class="text-muted small text-truncate">
+								Today, 05:25 <a href="javascript:void(0)" class="text-info">{{group.name}}</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ticketListMiniTemplate" type="text/x-handlebars-template">
+	<div class="row no-gutters row-grid align-items-stretch">
+		<div class="col-md">
+			<div class="p-2">
+				<div class="d-flex flex-column">
+					<a href="#ticket_view.html?id={{id}}" class="fs-lg fw-500 d-flex align-items-start">
+						#{{id}} {{subject}}
+					</a>
+					<div class="d-block text-muted fs-sm">
+						Created by <a href="javascript:openUserCardModal(getUserID('{{requester.name}}'));" class="text-info">{{requester.name}}</a> on {{created_time.display_value}}<span class="badge badge-warning ml-auto">{{status.name}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ticketView_mainPost" type="text/x-handlebars-template">
+	<div class="card mb-g border shadow-0">
+		<div class="card-header bg-white p-0">
+			<div class="p-3 d-flex flex-row">
+				<div class="d-block flex-shrink-0">
+					<img src="img/demo/avatars/avatar.png" class="img-fluid img-thumbnail" alt="">
+				</div>
+				<div class="d-block ml-2">
+					<span class="h6 font-weight-bold text-uppercase d-block m-0"><a href="javascript:openUserCardModal(getUserID('{{requester.name}}'));">{{requester.name}}</a></span>
+					Affected User: <span class="fs-sm h6 fw-500 mb-0"><a href="javascript:openUserCardModal(getUserID('{{on_behalf_of.name}}'));">{{on_behalf_of.name}}</a>&nbsp;</span>
+					<span class="text-muted fs-xs font-italic d-block">{{created_time.display_value}}</span>
+				</div>
+				<a href="javascript:void(0);" class="d-inline-flex align-items-center text-dark ml-auto align-self-start">
+					<span class="badge badge-warning ml-auto">{{status.name}}</span>
+				</a>
+			</div>
+		</div>
+		<div id="mainPost_{{id}}" class="card-body ">
+		</div>
+		<div class="card-footer">
+			<div class="d-flex align-items-center">
+				<a href="javascript:void(0);" class="flex-shrink-0 ml-auto">Reply <i class="fal fa-reply ml-2"></i> </a>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ticketView_messagePost" type="text/x-handlebars-template">
+	<div class="card mb-g border shadow-0">
+		<div class="card-header bg-white p-0">
+			<div class="p-3 d-flex flex-row">
+				<div class="d-block">
+					<img src="img/demo/avatars/avatar.png" class="img-fluid img-thumbnail" width="60%" height="60%" style="width:36px" alt="">
+				</div>
+				<div class="d-block ml-2">
+					<span class="h6 font-weight-bold text-uppercase d-block m-0"><a href="javascript:openUserCardModal(getUserID('{{created_by.name}}'));">{{created_by.name}}</a></span>
+					<span class="text-muted fs-xs font-italic d-block">{{created_time.display_value}}</span>
+				</div>
+				<a href="javascript:void(0);" class="d-inline-flex align-items-center text-dark ml-auto align-self-start">
+					<span class="badge badge-warning ml-auto">{{show_to_requester}}</span>
+				</a>
+			</div>
+		</div>
+		<div id="{{type}}_{{id}}" class="card-body ">
+		</div>
+		<div class="card-footer">
+			<div class="d-flex align-items-center">
+				<a href="javascript:void(0);" class="flex-shrink-0 ml-auto">Reply <i class="fal fa-reply ml-2"></i> </a>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ticketView_Header" type="text/x-handlebars-template">
+	<div class="subheader">
+		<h1 class="subheader-title">
+			<i class='subheader-icon fal fa-plus-circle'></i> {{subject}}: <span id='headerTicketID' class='fw-300'>#{{id}}</span>
+			<small>
+				{{mode.name}} / {{template.name}} / {{group.name}} / {{category.name}} / {{subcategory.name}}
+			</small>
+		</h1>
+	</div>
+</script>
+
+<script id="viewCategoryTemplate" type="text/x-handlebars-template">
+	<div class="col-12">
+		<div class="row no-gutters row-grid align-items-stretch">
+			<div class="col-md">
+				<div class="p-3">
+					<div class="d-flex">
+						<span class="icon-stack display-4 mr-3 flex-shrink-0">
+							<i class="base-2 icon-stack-3x color-primary-400"></i>
+							<i class="base-10 text-white icon-stack-1x"></i>
+							<i class="ni md-profile color-primary-800 icon-stack-2x"></i>
+						</span>
+						<div class="d-inline-flex flex-column">
+							<a href="#ticket_list.html?view={{id}}" class="fs-lg fw-500 d-block">
+								{{name}}
+							</a>
+							<div class="d-block text-muted fs-sm">
+								text blah blah
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-4 col-md-2 col-xl-1 hidden-md-down">
+				<div class="p-3 p-md-3">
+					<span class="d-block text-muted">- <i>Un-assigned</i></span>
+					<span class="d-block text-muted">- <i>Open</i></span>
+				</div>
+			</div>
+			<div class="col-8 col-md-3 hidden-md-down">
+				<div class="p-3 p-md-3">
+					<div class="d-flex align-items-center">
+						<div class="d-inline-block align-middle status status-success status-sm mr-2">
+							<span class="profile-image-md rounded-circle d-block" style="background-image:url('img/demo/avatars/avatar.png'); background-size: cover;"></span>
+						</div>
+						<div class="flex-1 min-width-0">
+							<a href="javascript:void(0);" class="d-block text-truncate">
+								latest ticket text
+							</a>
+							<div class="text-muted small text-truncate">
+								Today, 12:12 <a href="javascript:void(0)" class="text-info">userName</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="objectListTemplate" type="text/x-handlebars-template">
+	<li>
+		<a href="javascript:openUserCardModal('{{userID}}');" class="d-table w-100 px-2 py-2 text-dark hover-white" data-filter-tags="{{userID}}">
+			<div class="d-table-cell align-middle status status-success status-sm ">
+				<span class="profile-image-md rounded-circle d-block" style="background-image:url('img/demo/avatars/avatar-d.png'); background-size: cover;"></span>
+			</div>
+			<div class="d-table-cell w-100 align-middle pl-2 pr-2">
+				<div class="text-truncate text-truncate-md">
+					{{userID}}
+				</div>
+			</div>
+		</a>
+	</li>
+</script>
+
+<script id="modalCardTemplate" type="text/x-handlebars-template">
+	<div class="modal fade multiModal" id="{{id}}" index="{{index}}" tabindex="-1" role="dialog">
+		<div class="modal-dialog multiModalDialog" role="document">
+			<div id="card_{{id}}" class="card border mb-g">
+				<div class="card-header bg-trans-gradient py-1 pr-1 d-flex align-items-center flex-wrap">
+					<button class="btn bg-transparent fs-xl w-auto h-auto rounded-0" data-toggle="dropdown" aria-expanded="false">
+						<i class="fal fa-ellipsis-v"></i>
+					</button>
+					<div class="dropdown-menu dropdown-menu-animated dropdown-menu-left" x-placement="bottom-end" style="position: absolute; top: 37px; left: 182px; will-change: top, left;">
+						<button class="dropdown-item">
+							Option 1
+						</button>
+						<button class="dropdown-item">
+							Option 2
+						</button>
+						<div class="dropdown-divider m-0"></div>
+						<button class="dropdown-item">
+							Refresh
+						</button>
+					</div>
+
+					<div class="card-title text-white">User: {{userID}}</div>
+
+					<div class="d-flex position-relative ml-auto text-white">
+						<button class="btn bg-transparent fs-xl w-auto h-auto rounded-0"  data-toggle="collapse" data-target="#card_{{id}} > .card-body" aria-expanded="true">
+							<span class="collapsed-reveal"><i class="fal fa-window-minimize"></i></span>
+							<span class="collapsed-hidden"><i class="fal fa-expand"></i></span>
+						</button>
+
+						<button class="btn bg-transparent fs-xl w-auto h-auto rounded-0" data-dismiss="modal" data-original-title="Close">
+							<i class="fal fa-times"></i>
+						</button>
+					</div>
+
+				</div>
+				<div class="card-body show p-0">
+					<h1 class="ajax-loading-animation height-lg"><i class="fa fa-cog fa-spin"></i> Loading...</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="userCardTemplate" type="text/x-handlebars-template">
+	<ul class="nav nav-tabs nav-fill" role="tablist">
+		<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#{{sAMAccountName}}_home" role="tab">General</a></li>
+		<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#{{sAMAccountName}}_properties" role="tab">Properties</a></li>
+		<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#{{sAMAccountName}}_groups" onclick='groupMembership("{{sAMAccountName}}"); $(this).removeAttr("onclick");' role="tab">Groups</a></li>
+		<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#{{sAMAccountName}}_requests" onclick='userTickets("{{displayName}}","{{sAMAccountName}}"); $(this).removeAttr("onclick");' role="tab">Requests</a></li>
+	</ul>
+
+	<div class="tab-content p-3">
+		<div class="tab-pane fade show active" id="{{sAMAccountName}}_home" role="tabpanel">
+			<div class="row no-gutters row-grid">
+				<div class="col-12">
+					<div class="d-flex flex-column align-items-center justify-content-center p-4">
+						<img src="img/demo/avatars/avatar.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+						<h5 class="mb-0 fw-700 text-center mt-3">
+							{{displayName}}<small class="text-muted mb-0">{{Title}}</small><small class="text-muted mb-0">{{company}} -- {{department}}</small>
+							<address class="fs-sm fw-400 mt-2 mb-0 text-muted">
+								<i class="fas fa-map-pin mr-2"></i> {{StreetAddress}}, {{l}}, {{st}}, {{PostalCode}}
+							</address>
+						</h5>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="text-center py-3">
+						<h5 class="mb-0 fw-700">
+							{{whenCreated}}<small class="text-muted mb-0">Start Date</small>
+						</h5>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="text-center py-3">
+						<h5 class="mb-0 fw-700">
+							{{employeeID}}<small class="text-muted mb-0">Employee ID</small>
+						</h5>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="text-center py-3">
+						<h5 class="mb-0 fw-700">
+							{{accountStatus}}<small class="text-muted mb-0">Active Employee</small>
+						</h5>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="p-3 text-center">
+						<a href="tel:{{telephoneNumber}}" class="mt-1 d-block fs-sm fw-400 text-dark">
+							<i class="fas fa-mobile-alt text-muted mr-2"></i> {{telephoneNumber}}
+						</a>
+						<a href="mailto:{{mail}}" class="mt-1 d-block fs-sm fw-400 text-dark">
+							<i class="fas fa-mouse-pointer text-muted mr-2"></i> {{mail}}
+						</a>
+					</div>
+					<div class="p-3 text-center">
+						<a href="javascript:void(0);" class="btn-link font-weight-bold">E-mail</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+						<a href="javascript:void(0);" class="btn-link font-weight-bold">Skype Message</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+						<a href="javascript:void(0);" class="btn-link font-weight-bold">Connect</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="{{sAMAccountName}}_properties" role="tabpanel">
+			<div class="form-row">
+				<div class="col-md-12 mb-3">
+					<label class="form-label" for="name-f">Full Name</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text text-success">
+								<i class="ni ni-user fs-xl"></i>
+							</span>
+						</div>
+						<input id="{{sAMAccountName}}_nameF" type="text" aria-label="First name" class="form-control col-md-4" placeholder="First name" value="{{givenName}}">
+						<input id="{{sAMAccountName}}_nameM" type="text" aria-label="Middle initial" class="form-control col-md-2" placeholder="Middle initial" value="{{initials}}">
+						<input id="{{sAMAccountName}}_nameL" type="text" aria-label="Last name" class="form-control col-md-6" placeholder="Last name" value="{{sn}}">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="col-md-6 mb-3">
+					<label class="form-label">Display Name</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fal fa-user fs-xl"></i></span>
+						</div>
+						<input id="{{sAMAccountName}}_displayName" type="text" class="form-control" placeholder="Display Name" aria-label="Display Name" value="{{displayName}}">
+					</div>
+				</div>
+
+				<div class="col-md-6 mb-3">
+					<label class="form-label">Real Name</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fal fa-user fs-xl"></i></span>
+						</div>
+						<input id="{{sAMAccountName}}_realName" type="text" class="form-control" placeholder="Real Name" aria-label="Real Name"value="{{name}}">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="col-md-4 mb-3">
+					<label class="form-label">LoginID</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fal fa-user fs-xl"></i></span>
+						</div>
+						<input id="{{sAMAccountName}}_LoginID" type="text" class="form-control" placeholder="LoginID" aria-label="LoginID"value="{{sAMAccountName}}">
+					</div>
+				</div>
+
+				<div class="col-md-8 mb-3">
+					<label class="form-label">Email</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fal fa-mouse-pointer width-1 text-align-center"></i></span>
+						</div>
+						<input id="{{sAMAccountName}}_email" type="text" placeholder="" data-inputmask="'alias': 'email'" class="form-control" value="{{mail}}">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">Phone</label>
+				<input id="{{sAMAccountName}}_phone" type="text" placeholder="" data-inputmask="'mask': '(999) 999-9999'" class="form-control" value="{{telephoneNumber}}">
+			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="example-datetime-local-input">Account Expiration Date</label>
+				<input id="{{sAMAccountName}}_accountExpires" class="form-control" type="datetime-local" value="{{AccountExpirationDate}}">
+			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="basic-url">Account Info</label>
+				<textarea class="form-control" aria-label="With textarea">{{info}}</textarea>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="{{sAMAccountName}}_groups" role="tabpanel">
+			<div class="d-flex position-relative py-3 px-4">
+				<i class="fal fa-search color-info-700 position-absolute pos-left fs-lg px-3 py-2 mt-1 ml-4"></i>
+				<input type="text" id="{{sAMAccountName}}_list_filter" class="form-control shadow-inset-1 pl-6 border-info" placeholder="Filter nested groups (e.g fp_)">
+			</div>
+			<ul id="{{sAMAccountName}}_list" class="nav-menu nav-menu-reset nav-menu-compact bg-trans-gradient mb-sm-4 mb-md-0 rounded" data-nav-accordion="true">
+				<li>
+					<a href="javascript:void(0)">
+						<span class="nav-link-text"><h1 class="ajax-loading-animation height-lg"><i class="fa fa-cog fa-spin"></i> Loading...</h1></span>
+					</a>
+				</li>
+			</ul>
+			<div class="filter-message js-filter-message m-0 text-left pl-4 py-3 fw-500"></div>
+		</div>
+		<div class="tab-pane fade" id="{{sAMAccountName}}_requests" role="tabpanel">
+			<div id="{{sAMAccountName}}_requestList" class="row no-gutters row-grid">
+				<h1 class="ajax-loading-animation height-lg"><i class="fa fa-cog fa-spin"></i> Loading...</h1>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(":input").inputmask();
+
+			$('#{{sAMAccountName}}_list').slimScroll({
+				position: 'left',
+				height: '400px',
+				railVisible: true,
+				alwaysVisible: true
+			});
+		});
+	</script>
+</script>

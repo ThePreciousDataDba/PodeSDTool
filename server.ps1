@@ -31,8 +31,7 @@ Start-PodeServer -Threads 4 -ScriptBlock {
 	Import-PodeModule -Name ActiveDirectory
 	New-PodeLoggingMethod -Terminal | Enable-PodeErrorLogging
 	Enable-PodeSessionMiddleware -Secret 'podeSDPsession' -Name "SDPSession" -Duration 36000
-
-
+	#Session middleware causes significant slowdown and Remove session has negligible immprovement
 
 	Add-PodeRoute -Method Get -Path '/' -ScriptBlock {Write-PodeViewResponse -Path 'index'}
 	Add-PodePage -Name login -FilePath '.\views\login.pode' -Data @{ Domain = "$((Get-PodeConfig).SDPDomain)" }
